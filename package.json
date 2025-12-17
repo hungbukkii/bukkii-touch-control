@@ -1,10 +1,11 @@
 {
   "name": "bukkii-assistive-touch",
   "version": "1.0.0",
-  "description": "Bukkii Assistive Touch floating button for Windows/macOS/Linux",
+  "description": "Bukkii Assistive Touch floating button for Window",
   "main": "main.js",
   "scripts": {
     "rebuild": "electron-rebuild",
+    "postinstall": "electron-builder install-app-deps",
     "start": "electron .",
     "build": "electron-builder"
   },
@@ -12,8 +13,8 @@
   "license": "MIT",
   "devDependencies": {
     "@electron/rebuild": "^4.0.2",
-    "electron": "^34.0.0",
-    "electron-builder": "^24.13.3"
+    "electron": "^39.2.7",
+    "electron-builder": "^26.3.6"
   },
   "dependencies": {
     "electron-updater": "^6.6.2",
@@ -23,6 +24,9 @@
     "appId": "com.bukkii.assistivetouch",
     "win": {
       "target": "nsis"
+    },
+    "nsis": {
+      "artifactName": "${productName}-${version}.${ext}"
     },
     "mac": {
       "target": "dmg"

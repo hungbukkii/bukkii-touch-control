@@ -19,7 +19,6 @@ autoUpdater.logger = require("electron-log");
 autoUpdater.logger.transports.file.level = "info";
 
 function createWindow() {
-  // ... existing window creation code ...
   const primaryDisplay = screen.getPrimaryDisplay();
   const { width, height } = primaryDisplay.workAreaSize;
   const { x, y } = primaryDisplay.bounds;
@@ -60,7 +59,6 @@ function createWindow() {
 }
 
 function createTray() {
-  // ... existing tray code ...
   const iconPath = path.join(__dirname, "icon-transparent.png");
   tray = new Tray(iconPath);
   const contextMenu = Menu.buildFromTemplate([
