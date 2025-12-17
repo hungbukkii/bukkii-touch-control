@@ -1,0 +1,32 @@
+{
+  "name": "assistive-touch-desktop",
+  "version": "1.0.0",
+  "description": "Assistive Touch floating button for Windows/macOS/Linux",
+  "main": "main.js",
+  "scripts": {
+    "rebuild": "electron-rebuild",
+    "start": "electron .",
+    "build": "electron-builder"
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^32.0.0",
+    "electron-builder": "^24.13.3"
+  },
+  "dependencies": {
+    "robotjs": "^0.6.0"
+  },
+  "build": {
+    "appId": "com.example.assistivetouch",
+    "win": {
+      "target": "nsis"
+    },
+    "mac": {
+      "target": "dmg"
+    },
+    "linux": {
+      "target": "AppImage"
+    }
+  }
+}

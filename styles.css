@@ -1,0 +1,79 @@
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background: transparent;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  user-select: none;
+  -webkit-app-region: drag;
+  /* Cho phép kéo cửa sổ ở vùng trống */
+}
+
+.floating-btn {
+  width: 60px;
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  transition: background 0.3s;
+  -webkit-app-region: no-drag;
+}
+
+.floating-btn:hover {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.circle {
+  width: 40px;
+  height: 40px;
+  background: white;
+  border-radius: 50%;
+  opacity: 0.8;
+}
+
+.menu {
+  width: 220px;
+  height: 220px;
+  background: rgba(20, 20, 20, 0.92);
+  border-radius: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  box-sizing: border-box;
+  position: absolute;
+  top: 0;
+  left: 0;
+  backdrop-filter: blur(10px);
+  -webkit-app-region: no-drag;
+}
+
+.hidden {
+  display: none;
+}
+
+.menu-item {
+  width: 80px;
+  height: 80px;
+  background: rgba(255, 255, 255, 0.1);
+  margin: 5px;
+  border-radius: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  cursor: pointer;
+  flex-direction: column;
+  transition: background 0.2s;
+}
+
+.menu-item:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
