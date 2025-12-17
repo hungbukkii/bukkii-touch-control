@@ -8,6 +8,8 @@ contextBridge.exposeInMainWorld("electronAPI", {
             "dragging",
             "drag-end",
             "simulate-switch",
+            "switch-hold-start",
+            "switch-hold-end",
         ];
         if (validChannels.includes(channel)) {
             ipcRenderer.send(channel, data);

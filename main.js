@@ -113,7 +113,26 @@ ipcMain.on("drag-end", () => {
   dragStartWinPos = null;
 });
 
+let isAltHeld = false;
+
 ipcMain.on("simulate-switch", () => {
-  console.log("Simulating Alt+Tab");
-  robot.keyTap("tab", "alt");
+  if (!isAltHeld) {
+    console.log("Holding Alt+Tab");
+    robot.keyToggle("alt", "down");
+    robot.keyTap("tab");
+    isAltHeld = true;
+  } else {
+    console.log("Releasing Alt");
+    robot.keyToggle("alt", "up");
+    isAltHeld = false;
+  }
+});
+
+// Helper to ensure Alt is released (e.g. when dragging/closing)
+ipcMain.on("switch-hold-end", () => {
+  if (isAltHeld) {
+    console.log("Force Releasing Alt");
+    robot.keyToggle("alt", "up");
+    isAltHeld = false;
+  }
 });

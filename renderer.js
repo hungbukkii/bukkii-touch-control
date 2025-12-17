@@ -34,17 +34,22 @@ btn.addEventListener("mousedown", (e) => {
   document.addEventListener("mouseup", onMouseUp);
 });
 
+// Toggle interactions
 btnSwitch.addEventListener("click", () => {
   window.electronAPI.send("simulate-switch");
-  toggleMenu();
+  // Don't toggle menu immediately, let user see the Alt+Tab list
 });
 
 btnClose.addEventListener("click", () => {
+  // Ensure we release Alt if we close the menu
+  window.electronAPI.send("switch-hold-end");
   toggleMenu();
 });
 
 menu.addEventListener("click", (e) => {
   if (e.target === menu) {
+    // Background click closes menu and releases Alt
+    window.electronAPI.send("switch-hold-end");
     toggleMenu();
   }
 });
