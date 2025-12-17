@@ -1,6 +1,6 @@
 {
   "name": "bukkii-assistive-touch",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Bukkii Assistive Touch floating button for Window",
   "main": "main.js",
   "scripts": {
@@ -22,6 +22,10 @@
     "robotjs": "^0.6.0"
   },
   "build": {
+    "productName": "Bukkii Assistive Touch",
+    "asar": true,
+    "asarUnpack": ["**/*.node"],
+    "compression": "maximum",
     "appId": "com.bukkii.assistivetouch",
     "win": {
       "target": "nsis"
@@ -29,6 +33,17 @@
     "nsis": {
       "artifactName": "${productName}-${version}.${ext}"
     },
+
+    "files": [
+      "**/*",
+      "!**/node_modules/*/.cache/**",
+      "!**/test/**",
+      "!**/tests/**",
+      "!**/*.md",
+      "!**/docs/**",
+      "!**/.github/**",
+      "!**/.vscode/**"
+    ],
     "mac": {
       "target": "dmg"
     },

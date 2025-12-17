@@ -181,17 +181,45 @@ ipcMain.on("drag-end", () => {
 });
 
 let isAltHeld = false;
+let altTimer = null;
 
 ipcMain.on("simulate-switch", () => {
-  if (!isAltHeld) {
-    console.log("Holding Alt+Tab");
-    robot.keyToggle("alt", "down");
-    robot.keyTap("tab");
-    isAltHeld = true;
-  } else {
-    console.log("Releasing Alt");
-    robot.keyToggle("alt", "up");
-    isAltHeld = false;
+  console.log("simulate-switch triggered");
+  try {
+    if (!isAltHeld) {
+      // Press and hold Alt, tap Tab to open switcher
+      robot.keyToggle("alt", "down");
+      robot.keyTap("tab");
+      isAltHeld = true;
+
+      // Clear any existing timer and set a 5s auto-release to avoid getting stuck
+      if (altTimer) {
+        clearTimeout(altTimer);
+      }
+      altTimer = setTimeout(() => {
+        try {
+          if (isAltHeld) {
+            robot.keyToggle("alt", "up");
+            isAltHeld = false;
+            altTimer = null;
+            console.log("Auto released Alt after 5s");
+          }
+        } catch (err) {
+          console.error('Error releasing Alt in timer', err);
+        }
+      }, 3000);
+    } else {
+      // If already held, release early
+      console.log("Releasing Alt early");
+      robot.keyToggle("alt", "up");
+      isAltHeld = false;
+      if (altTimer) {
+        clearTimeout(altTimer);
+        altTimer = null;
+      }
+    }
+  } catch (err) {
+    console.error('simulate-switch failed', err);
   }
 });
 
@@ -199,7 +227,15 @@ ipcMain.on("simulate-switch", () => {
 ipcMain.on("switch-hold-end", () => {
   if (isAltHeld) {
     console.log("Force Releasing Alt");
-    robot.keyToggle("alt", "up");
+    try {
+      robot.keyToggle("alt", "up");
+    } catch (err) {
+      console.error('Error releasing Alt in switch-hold-end', err);
+    }
     isAltHeld = false;
+    if (altTimer) {
+      clearTimeout(altTimer);
+      altTimer = null;
+    }
   }
 });

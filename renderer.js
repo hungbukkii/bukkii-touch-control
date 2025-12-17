@@ -22,9 +22,9 @@ btn.addEventListener("mousedown", (e) => {
     document.removeEventListener("mouseup", onMouseUp);
 
     // // If not dragging, it's a click -> toggle switch
-    // if (!isDragging) {
-    //   window.electronAPI.send("simulate-switch");
-    // }
+    if (!isDragging) {
+      window.electronAPI.send("simulate-switch");
+    }
   };
 
   document.addEventListener("mousemove", onMouseMove);
