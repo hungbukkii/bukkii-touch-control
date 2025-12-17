@@ -23,7 +23,7 @@ function createWindow() {
   const { width, height } = primaryDisplay.workAreaSize;
   const { x, y } = primaryDisplay.bounds;
 
-  const iconPath = path.join(__dirname, "icon-transparent.png");
+  const iconPath = path.join(__dirname, "icon.png");
   const appIcon = nativeImage.createFromPath(iconPath);
 
   mainWindow = new BrowserWindow({
@@ -59,7 +59,7 @@ function createWindow() {
 }
 
 function createTray() {
-  const iconPath = path.join(__dirname, "icon-transparent.png");
+  const iconPath = path.join(__dirname, "icon.png");
   tray = new Tray(iconPath);
   const contextMenu = Menu.buildFromTemplate([
     {
