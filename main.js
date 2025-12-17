@@ -3,6 +3,8 @@ const {
   BrowserWindow,
   ipcMain,
   screen,
+  Tray,
+  Menu,
   nativeImage,
 } = require("electron");
 const path = require("path");
@@ -21,16 +23,15 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     width: 60,
     height: 60,
-    x: x + width - 100,
+    x: x + width - 150,
     y: y + Math.floor(height / 2) - 30,
     icon: appIcon,
     transparent: true,
     frame: false,
     alwaysOnTop: true,
-    skipTaskbar: true,
     resizable: false,
     hasShadow: false,
-    focusable: false,
+    focusable: true,
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
       contextIsolation: true,
@@ -51,10 +52,32 @@ function createWindow() {
   }, 2000);
 }
 
-app.whenReady().then(createWindow);
+function createTray() {
+  const iconPath = path.join(__dirname, "icon-transparent.png");
+  tray = new Tray(iconPath);
+  const contextMenu = Menu.buildFromTemplate([
+    {
+      label: 'Show/Hide', click: () => {
+        if (mainWindow.isVisible()) mainWindow.hide();
+        else mainWindow.show();
+      }
+    },
+    { type: 'separator' },
+    { label: 'Quit', click: () => app.quit() }
+  ]);
+  tray.setToolTip('Bukkii Touch Control');
+  tray.setContextMenu(contextMenu);
+}
 
-app.on("activate", () => {
-  if (BrowserWindow.getAllWindows().length === 0) createWindow();
+app.whenReady().then(() => {
+  createWindow();
+  createTray();
+
+  app.on("activate", () => {
+    if (BrowserWindow.getAllWindows().length === 0) {
+      createWindow();
+    }
+  });
 });
 
 app.on("window-all-closed", () => {
