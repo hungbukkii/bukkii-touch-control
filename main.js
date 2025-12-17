@@ -43,6 +43,12 @@ function createWindow() {
 
   mainWindow.setAlwaysOnTop(true, "screen-saver");
   mainWindow.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true });
+
+  setInterval(() => {
+    if (mainWindow && !mainWindow.isDestroyed()) {
+      mainWindow.setAlwaysOnTop(true, "screen-saver");
+    }
+  }, 2000);
 }
 
 app.whenReady().then(createWindow);
