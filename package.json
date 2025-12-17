@@ -1,7 +1,7 @@
 {
-  "name": "assistive-touch-desktop",
+  "name": "bukkii-assistive-touch",
   "version": "1.0.0",
-  "description": "Assistive Touch floating button for Windows/macOS/Linux",
+  "description": "Bukkii Assistive Touch floating button for Windows/macOS/Linux",
   "main": "main.js",
   "scripts": {
     "rebuild": "electron-rebuild",
@@ -18,7 +18,7 @@
     "robotjs": "^0.6.0"
   },
   "build": {
-    "appId": "com.example.assistivetouch",
+    "appId": "com.bukkii.assistivetouch",
     "win": {
       "target": "nsis"
     },

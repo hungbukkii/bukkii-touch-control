@@ -24,7 +24,7 @@ function createWindow() {
     width: 60,
     height: 60,
     x: x + width - 150,
-    y: y + Math.floor(height / 2) - 30,
+    y: y + Math.floor(height / 2) - 350,
     icon: appIcon,
     transparent: true,
     frame: false,
@@ -84,11 +84,11 @@ app.on("window-all-closed", () => {
   if (process.platform !== "darwin") app.quit();
 });
 
-ipcMain.on("resize-window", (event, { width, height }) => {
-  if (mainWindow && !mainWindow.isDestroyed()) {
-    mainWindow.setSize(width, height, true);
-  }
-});
+// ipcMain.on("resize-window", (event, { width, height }) => {
+//   if (mainWindow && !mainWindow.isDestroyed()) {
+//     mainWindow.setSize(width, height, true);
+//   }
+// });
 
 // Drag handling
 let dragStartCursor = null;
