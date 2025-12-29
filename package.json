@@ -1,6 +1,6 @@
 {
   "name": "bukkii-assistive-touch",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Bukkii Assistive Touch floating button for Window",
   "main": "main.js",
   "scripts": {
@@ -32,7 +32,8 @@
       "icon": "icon.ico"
     },
     "nsis": {
-      "artifactName": "${productName}-${version}.${ext}"
+      "artifactName": "${productName}-${version}.${ext}",
+      "createDesktopShortcut": true
     },
 
     "files": [
