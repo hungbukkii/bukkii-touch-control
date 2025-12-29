@@ -7,9 +7,11 @@ const {
   Menu,
   nativeImage,
   dialog,
+  shell,
 } = require("electron");
 const path = require("path");
 const robot = require("robotjs");
+const fs = require("fs");
 
 let mainWindow;
 
@@ -77,6 +79,57 @@ function createTray() {
   ]);
   tray.setToolTip('Bukkii Touch Control');
   tray.setContextMenu(contextMenu);
+}
+
+function createDesktopShortcut() {
+  try {
+    if (process.platform !== 'win32') return;
+    const desktopPath = app.getPath('desktop');
+    const shortcutPath = path.join(desktopPath, 'Bukkii Assistive Touch.lnk');
+    if (fs.existsSync(shortcutPath)) return;
+    try {
+      app.setAppUserModelId('com.bukkii.assistivetouch');
+    } catch (err) {
+      console.warn('setAppUserModelId failed', err);
+    }
+
+    // Look for probable .ico locations (project root, build/icons, resources)
+    const icoCandidates = [
+      path.join(__dirname, 'icon.ico'),
+      path.join(__dirname, 'build', 'icons', 'icon.ico'),
+      path.join(__dirname, 'assets', 'icon.ico')
+    ];
+    let chosenIcon = null;
+    for (const c of icoCandidates) {
+      try {
+        if (fs.existsSync(c)) {
+          chosenIcon = c;
+          break;
+        }
+      } catch (err) {
+        // ignore
+      }
+    }
+
+    const options = {
+      target: process.execPath,
+      args: '',
+      description: 'Bukkii Assistive Touch'
+    };
+
+    if (chosenIcon) {
+      options.icon = chosenIcon;
+      options.iconIndex = 0;
+      console.log('Using ICO for shortcut:', chosenIcon);
+    } else {
+      console.warn('No .ico found; shortcut will use default app icon or PNG fallback');
+    }
+
+    const created = shell.writeShortcutLink(shortcutPath, 'create', options);
+    console.log('Desktop shortcut created:', created, shortcutPath);
+  } catch (err) {
+    console.error('Failed to create desktop shortcut', err);
+  }
 }
 
 app.whenReady().then(() => {

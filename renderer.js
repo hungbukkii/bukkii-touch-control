@@ -97,23 +97,85 @@ btn.addEventListener("mousedown", (e) => {
     }, 10000);
   }
 
+  // Helper to show loading spinner and percent on the floating button
+  function showLoadingPercent(percent) {
+    const btn = document.getElementById('assistive-touch');
+    if (!btn) return;
+
+    // hide main svg icon visually
+    const svg = btn.querySelector('svg');
+    if (svg) svg.style.opacity = '0';
+
+    // spinner
+    let spinner = btn.querySelector('.spinner');
+    if (!spinner) {
+      spinner = document.createElement('div');
+      spinner.className = 'spinner';
+      btn.appendChild(spinner);
+    }
+
+    // percentage text
+    let ptext = btn.querySelector('.progress-text');
+    if (!ptext) {
+      ptext = document.createElement('div');
+      ptext.className = 'progress-text';
+      btn.appendChild(ptext);
+    }
+
+    // center text position
+    ptext.style.width = '100%';
+    ptext.style.left = '0';
+    ptext.style.top = '50%';
+    ptext.style.transform = 'translateY(-50%)';
+
+    ptext.innerText = Math.max(0, Math.min(100, Math.floor(percent))) + '%';
+    btn.classList.add('loading');
+  }
+
+  function clearLoadingIndicator(showBrief) {
+    const btn = document.getElementById('assistive-touch');
+    if (!btn) return;
+    const svg = btn.querySelector('svg');
+    if (svg) svg.style.opacity = '';
+    const spinner = btn.querySelector('.spinner');
+    const ptext = btn.querySelector('.progress-text');
+    if (spinner) spinner.remove();
+    if (ptext) ptext.remove();
+    btn.classList.remove('loading');
+
+    if (showBrief) {
+      // flash a brief success ring for 1s
+      btn.style.boxShadow = '0 0 0 4px rgba(255,255,255,0.12)';
+      setTimeout(() => { btn.style.boxShadow = ''; }, 800);
+    }
+  }
+
   // Wire update events from main
   if (window.electronAPI && window.electronAPI.onUpdate) {
     window.electronAPI.onUpdate('checking-for-update', () => {
-      showUpdateToast('Checking for updates...');
+      // show spinner at 0%
+      showLoadingPercent(0);
     });
     window.electronAPI.onUpdate('update-available', (info) => {
-      showUpdateToast('Update available: ' + (info && info.version ? info.version : 'new version'));
+      // keep spinner visible; show 0% when available
+      showLoadingPercent(0);
     });
     window.electronAPI.onUpdate('download-progress', (p) => {
       const percent = p && p.percent ? Math.floor(p.percent) : 0;
-      showUpdateToast('Downloading update: ' + percent + '%');
+      showLoadingPercent(percent);
     });
     window.electronAPI.onUpdate('update-downloaded', (info) => {
-      showUpdateToast('Update downloaded. Click to install now.', { label: 'Install' });
+      // show 100% then clear and prompt install via toast/button
+      showLoadingPercent(100);
+      setTimeout(() => {
+        clearLoadingIndicator(true);
+        showUpdateToast('Update downloaded. Click to install now.', { label: 'Install' });
+      }, 700);
     });
     window.electronAPI.onUpdate('update-error', (err) => {
       const msg = err && err.message ? err.message : (typeof err === 'string' ? err : 'Unknown error');
+      // clear loading and show error toast
+      clearLoadingIndicator();
       showUpdateToast('Update error: ' + msg);
     });
   }

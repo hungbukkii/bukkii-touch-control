@@ -27,3 +27,33 @@ body {
 .floating-btn:hover {
   background: rgba(0, 0, 0, 0.7);
 }
+
+/* Loading spinner and percentage overlay */
+.floating-btn.loading {
+  background: rgba(0,0,0,0.85);
+}
+
+.floating-btn .spinner {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 3px solid rgba(255,255,255,0.18);
+  border-top-color: #ffffff;
+  box-sizing: border-box;
+  animation: spin 1s linear infinite;
+  display: block;
+}
+
+.floating-btn .progress-text {
+  position: absolute;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 600;
+  pointer-events: none;
+  text-align: center;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
