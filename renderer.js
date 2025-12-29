@@ -2,9 +2,23 @@ const btn = document.getElementById("assistive-touch");
 
 let isDragging = false;
 let startX, startY;
+let ignoreLeave = false;
+
+btn.addEventListener("mouseenter", () => {
+  if (!ignoreLeave) {
+    window.electronAPI.send("enable-interaction");
+  }
+});
+
+btn.addEventListener("mouseleave", () => {
+  if (!ignoreLeave) {
+    window.electronAPI.send("disable-interaction");
+  }
+});
 
 btn.addEventListener("mousedown", (e) => {
   isDragging = false;
+  ignoreLeave = true; // Prevent disable during potential drag
   startX = e.screenX;
   startY = e.screenY;
   window.electronAPI.send("drag-start", { cursorX: startX, cursorY: startY });
@@ -16,12 +30,24 @@ btn.addEventListener("mousedown", (e) => {
     window.electronAPI.send("dragging", { cursorX: e.screenX, cursorY: e.screenY });
   };
 
-  const onMouseUp = () => {
+  const onMouseUp = (e) => {
     window.electronAPI.send("drag-end");
     document.removeEventListener("mousemove", onMouseMove);
     document.removeEventListener("mouseup", onMouseUp);
 
-    // // If not dragging, it's a click -> toggle switch
+    ignoreLeave = false;
+    // Disable interaction after mouse up
+    window.electronAPI.send("disable-interaction");
+
+    // If mouse is still over the button, re-enable
+    const rect = btn.getBoundingClientRect();
+    const mouseInBtn = e.clientX >= rect.left && e.clientX <= rect.right &&
+                       e.clientY >= rect.top && e.clientY <= rect.bottom;
+    if (mouseInBtn) {
+      window.electronAPI.send("enable-interaction");
+    }
+
+    // If not dragging, it's a click -> toggle switch
     if (!isDragging) {
       window.electronAPI.send("simulate-switch");
     }

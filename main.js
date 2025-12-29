@@ -38,7 +38,7 @@ function createWindow() {
     alwaysOnTop: true,
     resizable: false,
     hasShadow: false,
-    focusable: true,
+    focusable: false,
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
       contextIsolation: true,
@@ -51,12 +51,15 @@ function createWindow() {
 
   mainWindow.setAlwaysOnTop(true, "screen-saver");
   mainWindow.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true });
+  mainWindow.moveTop(); // Force to top initially
+  mainWindow.setIgnoreMouseEvents(true, { forward: true }); // Initial click-through
 
   setInterval(() => {
     if (mainWindow && !mainWindow.isDestroyed()) {
       mainWindow.setAlwaysOnTop(true, "screen-saver");
+      mainWindow.moveTop(); // Force to top of z-order
     }
-  }, 2000);
+  }, 500); // Reduced interval for more aggressive reassertion
 }
 
 function createTray() {
@@ -207,7 +210,7 @@ ipcMain.on("simulate-switch", () => {
         } catch (err) {
           console.error('Error releasing Alt in timer', err);
         }
-      }, 3000);
+      }, 5000); // Increased to 5s for longer switcher sessions
     } else {
       // If already held, release early
       console.log("Releasing Alt early");
@@ -220,6 +223,11 @@ ipcMain.on("simulate-switch", () => {
     }
   } catch (err) {
     console.error('simulate-switch failed', err);
+  }
+
+  // Reassert top position after simulation
+  if (mainWindow && !mainWindow.isDestroyed()) {
+    mainWindow.moveTop();
   }
 });
 
@@ -237,5 +245,18 @@ ipcMain.on("switch-hold-end", () => {
       clearTimeout(altTimer);
       altTimer = null;
     }
+  }
+});
+
+// Interaction toggles for click-through
+ipcMain.on("enable-interaction", () => {
+  if (mainWindow && !mainWindow.isDestroyed()) {
+    mainWindow.setIgnoreMouseEvents(false);
+  }
+});
+
+ipcMain.on("disable-interaction", () => {
+  if (mainWindow && !mainWindow.isDestroyed()) {
+    mainWindow.setIgnoreMouseEvents(true, { forward: true });
   }
 });

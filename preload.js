@@ -10,7 +10,9 @@ contextBridge.exposeInMainWorld("electronAPI", {
             "simulate-switch",
             "switch-hold-start",
             "switch-hold-end",
-            "install-update"
+            "install-update",
+            "enable-interaction",
+            "disable-interaction"
         ];
         if (validChannels.includes(channel)) {
             ipcRenderer.send(channel, data);
